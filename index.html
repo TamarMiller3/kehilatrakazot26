@@ -1,108 +1,212 @@
-import streamlit as st
-import pandas as pd
-import plotly.express as px
-
-# הגדרות עמוד ותמיכה בכתיבה מימין לשמאל
-st.set_page_config(page_title="דשבורד קהילת רכזי הערכה תשפ\"ו", layout="wide")
-
-# הזרקת CSS להתאמת כיוון הטקסט לעברית (RTL)
-st.markdown("""
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>דשבורד קהילת רכזי הערכה תשפ"ו</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-    body, div, h1, h2, h3, h4, p, span, table {
-        direction: RTL;
-        text-align: right;
-    }
-    .stMetric {
-        text-align: right;
-    }
+        body {
+            font-family: 'Assistant', sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .header h1 { margin: 0; font-size: 28px; }
+        .header p { margin: 10px 0 0 0; opacity: 0.9; }
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .metric-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-right: 5px solid #2a5298;
+        }
+        .metric-title { font-size: 14px; color: #666; margin-bottom: 5px; }
+        .metric-value { font-size: 24px; font-weight: bold; color: #1e3c72; }
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+        @media (max-width: 768px) {
+            .main-content { grid-template-columns: 1fr; }
+        }
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .card h2 { margin-top: 0; color: #1e3c72; font-size: 20px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; }
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            font-family: 'Assistant', sans-serif;
+            margin-bottom: 20px;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #ccc;
+        }
+        .tab-btn {
+            padding: 10px 20px;
+            border: none;
+            background: none;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #666;
+        }
+        .tab-btn.active {
+            color: #1e3c72;
+            border-bottom: 3px solid #1e3c72;
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        ul { padding-right: 20px; }
+        li { margin-bottom: 12px; line-height: 1.6; }
     </style>
-    """, unsafe_allow_html=True)
+</head>
+<body>
 
-# כותרת ראשית
-st.title("📊 דשבורד מנהלים אינטראקטיבי - קהילת רכזי הערכה תשפ\"ו")
-st.subheader("ניתוח ממצאי משוב מסכם לצוות הפיקוח, המדריכים והמנהלים")
-st.markdown("---")
+<div class="container">
+    <div class="header">
+        <h1>📊 דשבורד מנהלים אינטראקטיבי - קהילת רכזי הערכה תשפ"ו</h1>
+        <p>ניתוח ממצאי משוב מסכם לצוות הפיקוח, המדריכים והמנהלים</p>
+    </div>
 
-# נתונים כמותיים מתוך המשוב
-data_quantitative = {
-    "מדד הערכה": [
-        "שביעות רצון כללית מהקהילה", 
-        "רלוונטיות הנושאים לצרכי הרכזים", 
-        "תחושת שותפות ומעורבות במפגשים", 
-        "תרומת הקהילה להתפתחות המקצועית"
-    ],
-    "מידה רבה מאוד / רבה (%)": [92.3, 92.3, 84.6, 76.9],
-    "מידה בינונית (%)": [7.7, 0.0, 15.4, 23.1],
-    "מידה מועטה / כלל לא (%)": [0.0, 7.7, 0.0, 0.0]
-}
-df_quant = pd.DataFrame(data_quantitative)
+    <div class="metrics-grid">
+        <div class="metric-card">
+            <div class="metric-title">שביעות רצון כללית (רבה)</div>
+            <div class="metric-value">92.3%</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-title">רלוונטיות התכנים (רבה)</div>
+            <div class="metric-value">92.3%</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-title">מעורבות ושותפות במפגשים</div>
+            <div class="metric-value">84.6%</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-title">תרומה להתפתחות המקצועית</div>
+            <div class="metric-value">76.9%</div>
+        </div>
+    </div>
 
-# קוביות מדדים עליונות (KPIs)
-col1, col2, col3, col4 = st.columns(4)
-with col1:
-    st.metric(label="שביעות רצון כללית (רבה)", value="92.3%", delta="יעד הושג")
-with col2:
-    st.metric(label="רלוונטיות התכנים (רבה)", value="92.3%", delta="גבוה מאוד")
-with col3:
-    st.metric(label="מעורבות ושותפות במפגשים", value="84.6%")
-with col4:
-    st.metric(label="תרומה להתפתחות המקצועית", value="76.9%")
+    <div class="main-content">
+        <div class="card">
+            <h2>📈 נתונים כמותיים וגרפים</h2>
+            <label for="metricSelect">בחר מדד לצפייה בהתפלגות התשובות:</label>
+            <select id="metricSelect" onchange="updateChart()">
+                <option value="satisfaction">שביעות רצון כללית מהקהילה</option>
+                <option value="relevance">רלוונטיות הנושאים לצרכי הרכזים</option>
+                <option value="partnership">תחושת שותפות ומעורבות במפגשים</option>
+                <option value="contribution">תרומת הקהילה להתפתחות המקצועית</option>
+            </select>
+            <div style="position: relative; height:300px; width:100%">
+                <canvas id="myChart"></canvas>
+            </div>
+        </div>
 
-st.markdown("---")
+        <div class="card">
+            <h2>💡 תובנות איכותניות ומגמות</h2>
+            <div class="tabs">
+                <button class="tab-btn active" onclick="openTab(event, 'tab1')">📌 לשימור</button>
+                <button class="tab-btn" onclick="openTab(event, 'tab2')">🎯 לשיפור</button>
+                <button class="tab-btn" onclick="openTab(event, 'tab3')">🎙️ מהשטח</button>
+            </div>
+            
+            <div id="tab1" class="tab-content active">
+                <ul>
+                    <li><strong>עבודה מבוססת נתונים:</strong> הרכזים רכשו כלים מעשיים לניתוח מבדקי ראמ"ה פנימיים וחיצוניים, סקרי אקלים ותוכניות 'תנופה'.</li>
+                    <li><strong>חדשנות טכנולוגית:</strong> שילוב מוצלח של כלי בינה מלאכותית (AI) ומערכות דיגיטליות (כלנית, מילגו, נוטבוק).</li>
+                    <li><strong>הפגת הבדידות:</strong> יצירת מרחב בטוח ולמידת עמיתים מעשירה שאיפשרה שיתוף דילמות.</li>
+                </ul>
+            </div>
+            
+            <div id="tab2" class="tab-content">
+                <ul>
+                    <li><strong>הרחבת הזמן היישומי:</strong> דרישה מהשטח ליותר התנסות מעשית בכלי המיפוי הממוחשבים של ראמ"ה.</li>
+                    <li><strong>דיפרנציאליות לוותק:</strong> יצירת תכנים מתקדמים ומסלול צמיחה מותאם לרכזים ותיקים.</li>
+                    <li><strong>דיוק הגדרת התפקיד:</strong> הגדרת גבולות גזרה אסטרטגיים מול מנהלי בתי הספר למניעת עומס.</li>
+                </ul>
+            </div>
 
-# חלק א': נתונים כמותיים וגרפים
-st.header("📈 נתונים כמותיים")
+            <div id="tab3" class="tab-content">
+                <ul>
+                    <li><strong>איכות המנחות:</strong> המשתתפים ציינו לטובה את המקצועיות, הנגשת החומר 'בגובה העיניים', והביקורים הפיזיים בשטח.</li>
+                    <li><strong>תרבות הערכה מצמיחה:</strong> שינוי התפיסה הבית-ספרית לשימוש בנתונים לצורך צמיחה ופיתוח, ולא ככלי ביקורתי או מעניש.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
 
-# בחירת מדד להצגה בגרף דינמי
-selected_metric = st.selectbox("בחר מדד לצפייה בגרף התפלגות:", df_quant["מדד הערכה"])
+<script>
+    const dataSets = {
+        satisfaction: [92.3, 7.7, 0.0],
+        relevance: [92.3, 0.0, 7.7],
+        partnership: [84.6, 15.4, 0.0],
+        contribution: [76.9, 23.1, 0.0]
+    };
 
-# סינון הנתון שנבחר
-metric_row = df_quant[df_quant["מדד הערכה"] == selected_metric].iloc[0]
-chart_data = pd.DataFrame({
-    "רמת שביעות רצון": ["מידה רבה מאוד / רבה", "מידה בינונית", "מידה מועטה / כלל לא"],
-    "אחוזים": [metric_row["מידה רבה מאוד / רבה (%)"], metric_row["מידה בינונית (%)"], metric_row["מידה מועטה / כלל לא (%)"]]
-})
+    let ctx = document.getElementById('myChart').getContext('2d');
+    let myChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['מידה רבה מאוד / רבה (%)', 'מידה בינונית (%)', 'מידה מועטה / כלל לא (%)'],
+            datasets: [{
+                data: dataSets.satisfaction,
+                backgroundColor: ['#2a5298', '#ffb347', '#ff6b6b']
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom', rtl: true } }
+        }
+    });
 
-# יצירת גרף פאי אינטראקטיבי באמצעות Plotly
-fig_pie = px.pie(chart_data, values="אחוזים", names="רמת שביעות רצון", 
-                 title=f"התפלגות התשובות עבור: {selected_metric}",
-                 color_discrete_sequence=px.colors.sequential.RdBu)
-fig_pie.update_traces(textposition='inside', textinfo='percent+label')
-st.plotly_chart(fig_pie, use_container_width=True)
+    function updateChart() {
+        const selected = document.getElementById('metricSelect').value;
+        myChart.data.datasets[0].data = dataSets[selected];
+        myChart.update();
+    }
 
-# הצגת טבלת הנתונים המלאה
-st.subheader("טבלת ריכוז נתונים כמותיים מלאה")
-st.dataframe(df_quant, use_container_width=True)
-
-st.markdown("---")
-
-# חלק ב': ממצאים איכותניים ותחומי השפעה
-st.header("💡 תובנות איכותניות ומגמות מהשדה")
-
-tab1, tab2, tab3 = st.tabs(["📌 נקודות חוזק (לשימור)", "🎯 אתגרים והמלצות (לשיפור)", "🎙️ מהשטח (ציטוטים ומנחות)"])
-
-with tab1:
-    st.subheader("תחומי השפעה וחוזקות מרכזיים")
-    st.markdown("""
-    * **עבודה מבוססת נתונים (Data-Driven):** הרכזים רכשו כלים מעשיים לניתוח מבדקי ראמ"ה פנימיים וחיצוניים, סקרי אקלים ותוכניות 'תנופה', ותרגומם לגרפים וטבלאות עבודה בית-ספריות.
-    * **חדשנות טכנולוגית:** שילוב מוצלח של כלי בינה מלאכותית (AI) ומערכות ניהול דיגיטליות (כלנית, שאלוני מילגו, נוטבוק).
-    * **הפגת הבדידות בתפקיד:** יצירת מרחב בטוח ולמידת עמיתים מעשירה שאיפשרה שיתוף דילמות ואתגרים משותפים.
-    """)
-
-with tab2:
-    st.subheader("המלצות ותוכנית עבודה לשנת הלימודים הבאה")
-    st.markdown("""
-    1. **הרחבת הזמן היישומי:** דרישה מהשטח ליותר התנסות מעשית 'על רטוב' במערכות המחשוב והמיפוי של ראמ"ה במהלך המפגשים.
-    2. **דיפרנציאליות לוותק:** יצירת תכנים מתקדמים ומסלול צמיחה מותאם לרכזים ותיקים (קפיצת מדרגה מקצועית).
-    3. **דיוק הגדרת התפקיד:** הגדרת גבולות גזרה אסטרטגיים מול מנהלי בתי הספר כדי למנוע עומס ופיזור על פני יותר מדי משימות הערכה.
-    """)
-
-with tab3:
-    st.subheader("שבחי ההנחיה והערכת המשתתפים")
-    st.markdown("""
-    * **איכות המנחות:** המשתתפים ציינו לטובה את המקצועיות, הנגשת החומר המורכב 'בגובה העיניים', הזמינות הגבוהה והביקורים הפיזיים בשטח (כולל שיחות משולשות מול הנהלות בתי הספר).
-    * **תרבות הערכה מצמיחה:** הלמידה בקהילה שינתה את התפיסה הבית-ספרית – שימוש בנתונים לצמיחה ופיתוח, ולא ככלי ביקורתי או מעניש.
-    """)
-
-st.markdown("---")
-st.info("💡 הדשבורד נבנה עבור מחוז רכזי הערכה ומוכן להצגה במפגשי פיקוח והנהלה.")
+    function openTab(evt, tabId) {
+        let i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tab-content");
+        for (i = 0; i < tabcontent.length; i++) { tabcontent[i].style.display = "none"; }
+        tablinks = document.getElementsByClassName("tab-btn");
+        for (i = 0; i < tablinks.length; i++) { tablinks[i].className = tablinks[i].className.replace(" active", ""); }
+        document.getElementById(tabId).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+</script>
+</body>
+</html>
