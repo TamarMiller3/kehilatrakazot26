@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>דשבורד קהילת רכזי הערכה תשפ"ו</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -128,7 +129,7 @@
                 <option value="partnership">תחושת שותפות ומעורבות במפגשים</option>
                 <option value="contribution">תרומת הקהילה להתפתחות המקצועית</option>
             </select>
-            <div style="position: relative; height:300px; width:100%">
+            <div style="position: relative; height:320px; width:100%">
                 <canvas id="myChart"></canvas>
             </div>
         </div>
@@ -136,31 +137,31 @@
         <div class="card">
             <h2>💡 תובנות איכותניות ומגמות</h2>
             <div class="tabs">
-                <button class="tab-btn active" onclick="openTab(event, 'tab1')">📌 לשימור</button>
-                <button class="tab-btn" onclick="openTab(event, 'tab2')">🎯 לשיפור</button>
-                <button class="tab-btn" onclick="openTab(event, 'tab3')">🎙️ מהשטח</button>
+                <button class="tab-btn active" onclick="openTab(event, 'tab1')">לשימור</button>
+                <button class="tab-btn" onclick="openTab(event, 'tab2')">לשיפור</button>
+                <button class="tab-btn" onclick="openTab(event, 'tab3')">מהשטח</button>
             </div>
             
             <div id="tab1" class="tab-content active">
                 <ul>
                     <li><strong>עבודה מבוססת נתונים:</strong> הרכזים רכשו כלים מעשיים לניתוח מבדקי ראמ"ה פנימיים וחיצוניים, סקרי אקלים ותוכניות 'תנופה'.</li>
-                    <li><strong>חדשנות טכנולוגית:</strong> שילוב מוצלח של כלי בינה מלאכותית (AI) ומערכות דיגיטליות (כלנית, מילגו, נוטבוק).</li>
-                    <li><strong>הפגת הבדידות:</strong> יצירת מרחב בטוח ולמידת עמיתים מעשירה שאיפשרה שיתוף דילמות.</li>
+                    <li><strong>חדשנות טכנולוגית:</strong> שילוב מוצלח של כלי בינה מלאכותית (AI) ומערכות ניהול דיגיטליות (כלנית, מילגו, נוטבוק).</li>
+                    <li><strong>הפגת הבדידות בתפקיד:</strong> יצירת מרחב בטוח ולמידת עמיתים מעשירה שאיפשרה שיתוף דילמות ואתגרים משותפים.</li>
                 </ul>
             </div>
             
             <div id="tab2" class="tab-content">
                 <ul>
-                    <li><strong>הרחבת הזמן היישומי:</strong> דרישה מהשטח ליותר התנסות מעשית בכלי המיפוי הממוחשבים של ראמ"ה.</li>
-                    <li><strong>דיפרנציאליות לוותק:</strong> יצירת תכנים מתקדמים ומסלול צמיחה מותאם לרכזים ותיקים.</li>
-                    <li><strong>דיוק הגדרת התפקיד:</strong> הגדרת גבולות גזרה אסטרטגיים מול מנהלי בתי הספר למניעת עומס.</li>
+                    <li><strong>הרחבת הזמן היישומי:</strong> דרישה מהשטח ליותר התנסות מעשית 'על רטוב' במערכות המחשוב והמיפוי של ראמ"ה במהלך המפגשים.</li>
+                    <li><strong>דיפרנציאליות לוותק:</strong> יצירת תכנים מתקדמים ומסלול צמיחה מותאם לרכזים ותיקים (קפיצת מדרגה מקצועית).</li>
+                    <li><strong>דיוק הגדרת התפקיד:</strong> הגדרת גבולות גזרה אסטרטגיים מול מנהלי בתי הספר כדי למנוע עומס ופיזור על פני יותר מדי משימות הערכה.</li>
                 </ul>
             </div>
 
             <div id="tab3" class="tab-content">
                 <ul>
-                    <li><strong>איכות המנחות:</strong> המשתתפים ציינו לטובה את המקצועיות, הנגשת החומר 'בגובה העיניים', והביקורים הפיזיים בשטח.</li>
-                    <li><strong>תרבות הערכה מצמיחה:</strong> שינוי התפיסה הבית-ספרית לשימוש בנתונים לצורך צמיחה ופיתוח, ולא ככלי ביקורתי או מעניש.</li>
+                    <li><strong>איכות המנחות:</strong> המשתתפים ציינו לטובה את המקצועיות, הנגשת החומר המורכב 'בגובה העיניים', הזמינות הגבוהה והביקורים הפיזיים בשטח.</li>
+                    <li><strong>תרבות הערכה מצמיחה:</strong> הלמידה בקהילה שינתה את התפיסה הבית-ספרית – שימוש בנתונים לצמיחה ופיתוח, ולא ככלי ביקורתי או מעניש.</li>
                 </ul>
             </div>
         </div>
@@ -175,6 +176,9 @@
         contribution: [76.9, 23.1, 0.0]
     };
 
+    // רישום תוסף תגיות המידע כדי להציג את האחוזים ישירות על הפאי
+    Chart.register(ChartDataLabels);
+
     let ctx = document.getElementById('myChart').getContext('2d');
     let myChart = new Chart(ctx, {
         type: 'pie',
@@ -188,7 +192,18 @@
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { position: 'bottom', rtl: true } }
+            plugins: { 
+                legend: { position: 'bottom', rtl: true },
+                datalabels: {
+                    formatter: (value, ctx) => {
+                        // אם האחוז הוא 0, לא נציג תגית כדי שהגרף יישאר נקי
+                        if (value === 0) return null;
+                        return value + "%";
+                    },
+                    color: '#fff',
+                    font: { weight: 'bold', size: 14 }
+                }
+            }
         }
     });
 
